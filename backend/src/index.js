@@ -26,7 +26,14 @@ connectDatabase();
 
 // Middlewares
 app.use(helmet({
-  contentSecurityPolicy: false, // Disable for Swagger UI
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"], // Required for Swagger UI
+      scriptSrc: ["'self'", "'unsafe-inline'"], // Required for Swagger UI
+      imgSrc: ["'self'", "data:", "https:"]
+    }
+  }
 }));
 app.use(cors({
   origin: process.env.CORS_ORIGIN || 'http://localhost:3000',

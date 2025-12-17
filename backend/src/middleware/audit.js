@@ -24,7 +24,14 @@ export const auditLog = (action, entity) => {
       try {
         // Only log successful operations (2xx status codes)
         if (res.statusCode >= 200 && res.statusCode < 300 && req.user) {
-          const entityId = req.params.id || responseData?._id || responseData?.id;
+          // Extract entity ID from various possible sources
+          let entityId = req.params.id;
+          if (!entityId && responseData) {
+            entityId = responseData._id || responseData.id || 
+                      responseData.request?._id || responseData.request?.id ||
+                      responseData.purchaseOrder?._id || responseData.purchaseOrder?.id ||
+                      responseData.user?._id || responseData.user?.id;
+          }
           
           if (entityId) {
             await AuditLog.create({
