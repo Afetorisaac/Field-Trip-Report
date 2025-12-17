@@ -1,0 +1,86 @@
+sequenceDiagram
+    participant R as Requester<br/>(Ella)
+    participant UI as Vue Frontend
+    participant API as Express API
+    participant Auth as Auth Middleware
+    participant DB as MongoDB
+    participant DH as Dept Head
+    participant P as Procurement
+
+    %% Create Request Flow
+    rect rgb(220, 240, 255)
+        Note over R,DB: Submit Procurement Request
+        R->>UI: Create new request
+        UI->>API: POST /api/requests
+        API->>Auth: Verify JWT token
+        Auth->>API: Token valid
+        API->>DB: Save request
+        DB-->>API: Request created
+        API-->>UI: 201 Created
+        UI-->>R: Show success message
+    end
+
+    %% Approval Flow
+    rect rgb(220, 255, 240)
+        Note over DH,DB: Approve Request
+        DH->>UI: View pending requests
+        UI->>API: GET /api/requests?status=pending
+        API->>Auth: Verify JWT + Check role
+        Auth->>API: Authorized (dept_head)
+        API->>DB: Query requests
+        DB-->>API: Return requests
+        API-->>UI: 200 OK
+        DH->>UI: Approve request
+        UI->>API: POST /api/requests/:id/approve
+        API->>Auth: Verify JWT + Check role
+        Auth->>API: Authorized
+        API->>DB: Update request status
+        DB->>DB: Create audit log
+        DB-->>API: Request approved
+        API-->>UI: 200 OK
+        UI-->>DH: Show success
+    end
+
+    %% Create PO Flow
+    rect rgb(255, 240, 220)
+        Note over P,DB: Create Purchase Order
+        P->>UI: View approved requests
+        UI->>API: GET /api/requests?status=approved
+        API->>Auth: Verify JWT + Check role
+        Auth->>API: Authorized (procurement)
+        API->>DB: Query approved requests
+        DB-->>API: Return requests
+        API-->>UI: 200 OK
+        P->>UI: Create PO for request
+        UI->>API: POST /api/requests/:id/create-po
+        API->>Auth: Verify JWT + Check role
+        Auth->>API: Authorized
+        API->>DB: Create PO record
+        DB->>DB: Update request status
+        DB->>DB: Create audit log
+        DB-->>API: PO created
+        API-->>UI: 201 Created
+        UI-->>P: Show PO details
+    end
+
+    %% Mark Delivered Flow
+    rect rgb(240, 255, 220)
+        Note over P,DB: Mark as Delivered
+        P->>UI: View active POs
+        UI->>API: GET /api/po
+        API->>Auth: Verify JWT + Check role
+        Auth->>API: Authorized
+        API->>DB: Query POs
+        DB-->>API: Return POs
+        API-->>UI: 200 OK
+        P->>UI: Mark PO as delivered
+        UI->>API: POST /api/po/:id/mark-delivered
+        API->>Auth: Verify JWT + Check role
+        Auth->>API: Authorized
+        API->>DB: Update PO status
+        DB->>DB: Update request status
+        DB->>DB: Create audit log
+        DB-->>API: Status updated
+        API-->>UI: 200 OK
+        UI-->>P: Show confirmation
+    end

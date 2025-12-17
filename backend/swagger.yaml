@@ -1,0 +1,738 @@
+openapi: 3.0.0
+info:
+  title: Ella Procurement System API
+  description: API documentation for Ella procurement automation system
+  version: 1.0.0
+  contact:
+    name: Ella Procurement Team
+
+servers:
+  - url: http://localhost:4000
+    description: Development server
+  - url: http://localhost:4000/api
+    description: API Base URL
+
+tags:
+  - name: Authentication
+    description: User authentication endpoints
+  - name: Requests
+    description: Procurement request management
+  - name: Purchase Orders
+    description: Purchase order management
+  - name: Users
+    description: User management (admin only)
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+        email:
+          type: string
+        name:
+          type: string
+        role:
+          type: string
+          enum: [requester, dept_head, procurement, admin]
+        department:
+          type: string
+        active:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Request:
+      type: object
+      properties:
+        _id:
+          type: string
+        requestNumber:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              quantity:
+                type: number
+              estimatedPrice:
+                type: number
+              unit:
+                type: string
+        totalEstimatedCost:
+          type: number
+        requester:
+          $ref: '#/components/schemas/User'
+        department:
+          type: string
+        status:
+          type: string
+          enum: [pending, approved, rejected, po_created, delivered, cancelled]
+        priority:
+          type: string
+          enum: [low, medium, high, urgent]
+        createdAt:
+          type: string
+          format: date-time
+
+    PurchaseOrder:
+      type: object
+      properties:
+        _id:
+          type: string
+        poNumber:
+          type: string
+        request:
+          type: string
+        supplier:
+          type: object
+          properties:
+            name:
+              type: string
+            contact:
+              type: string
+            email:
+              type: string
+            address:
+              type: string
+        items:
+          type: array
+          items:
+            type: object
+        totalAmount:
+          type: number
+        tax:
+          type: number
+        grandTotal:
+          type: number
+        status:
+          type: string
+          enum: [created, sent, confirmed, delivered, cancelled]
+        createdAt:
+          type: string
+          format: date-time
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        details:
+          type: array
+          items:
+            type: object
+
+paths:
+  /api/auth/register:
+    post:
+      tags:
+        - Authentication
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+                - name
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 6
+                name:
+                  type: string
+                role:
+                  type: string
+                  enum: [requester, dept_head, procurement, admin]
+                department:
+                  type: string
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  user:
+                    $ref: '#/components/schemas/User'
+                  token:
+                    type: string
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Login user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  user:
+                    $ref: '#/components/schemas/User'
+                  token:
+                    type: string
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/auth/profile:
+    get:
+      tags:
+        - Authentication
+      summary: Get current user profile
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User profile
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/requests:
+    post:
+      tags:
+        - Requests
+      summary: Create a new procurement request
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - description
+                - items
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                items:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - name
+                      - quantity
+                      - estimatedPrice
+                    properties:
+                      name:
+                        type: string
+                      quantity:
+                        type: number
+                        minimum: 1
+                      estimatedPrice:
+                        type: number
+                        minimum: 0
+                      unit:
+                        type: string
+                priority:
+                  type: string
+                  enum: [low, medium, high, urgent]
+                notes:
+                  type: string
+      responses:
+        '201':
+          description: Request created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  request:
+                    $ref: '#/components/schemas/Request'
+
+    get:
+      tags:
+        - Requests
+      summary: Get all requests (filtered by role)
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum: [pending, approved, rejected, po_created, delivered, cancelled]
+        - in: query
+          name: department
+          schema:
+            type: string
+        - in: query
+          name: priority
+          schema:
+            type: string
+            enum: [low, medium, high, urgent]
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: List of requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  requests:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Request'
+                  pagination:
+                    type: object
+
+  /api/requests/{id}:
+    get:
+      tags:
+        - Requests
+      summary: Get request by ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Request details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  request:
+                    $ref: '#/components/schemas/Request'
+
+  /api/requests/{id}/approve:
+    post:
+      tags:
+        - Requests
+      summary: Approve a request (dept_head or admin only)
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Request approved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  request:
+                    $ref: '#/components/schemas/Request'
+
+  /api/requests/{id}/reject:
+    post:
+      tags:
+        - Requests
+      summary: Reject a request (dept_head or admin only)
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                rejectionReason:
+                  type: string
+      responses:
+        '200':
+          description: Request rejected successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  request:
+                    $ref: '#/components/schemas/Request'
+
+  /api/requests/{id}/create-po:
+    post:
+      tags:
+        - Purchase Orders
+      summary: Create purchase order for a request (procurement or admin only)
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - supplier
+                - items
+              properties:
+                supplier:
+                  type: object
+                  required:
+                    - name
+                  properties:
+                    name:
+                      type: string
+                    contact:
+                      type: string
+                    email:
+                      type: string
+                    address:
+                      type: string
+                items:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - name
+                      - quantity
+                      - unitPrice
+                    properties:
+                      name:
+                        type: string
+                      quantity:
+                        type: number
+                      unitPrice:
+                        type: number
+                      unit:
+                        type: string
+                tax:
+                  type: number
+                deliveryDate:
+                  type: string
+                  format: date
+                notes:
+                  type: string
+      responses:
+        '201':
+          description: Purchase order created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  purchaseOrder:
+                    $ref: '#/components/schemas/PurchaseOrder'
+
+  /api/po:
+    get:
+      tags:
+        - Purchase Orders
+      summary: Get all purchase orders (procurement or admin only)
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: status
+          schema:
+            type: string
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: List of purchase orders
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  purchaseOrders:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PurchaseOrder'
+                  pagination:
+                    type: object
+
+  /api/po/{id}:
+    get:
+      tags:
+        - Purchase Orders
+      summary: Get purchase order by ID (procurement or admin only)
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Purchase order details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  purchaseOrder:
+                    $ref: '#/components/schemas/PurchaseOrder'
+
+  /api/po/{id}/mark-delivered:
+    post:
+      tags:
+        - Purchase Orders
+      summary: Mark purchase order as delivered (procurement or admin only)
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Purchase order marked as delivered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  purchaseOrder:
+                    $ref: '#/components/schemas/PurchaseOrder'
+
+  /api/users:
+    get:
+      tags:
+        - Users
+      summary: Get all users (admin only)
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: role
+          schema:
+            type: string
+        - in: query
+          name: active
+          schema:
+            type: boolean
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+                  pagination:
+                    type: object
+
+  /api/users/{id}:
+    get:
+      tags:
+        - Users
+      summary: Get user by ID (admin only)
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/User'
+
+    put:
+      tags:
+        - Users
+      summary: Update user (admin only)
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                role:
+                  type: string
+                  enum: [requester, dept_head, procurement, admin]
+                department:
+                  type: string
+                active:
+                  type: boolean
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  user:
+                    $ref: '#/components/schemas/User'
+
+    delete:
+      tags:
+        - Users
+      summary: Deactivate user (admin only)
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User deactivated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  user:
+                    $ref: '#/components/schemas/User'
