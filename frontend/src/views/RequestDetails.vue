@@ -87,13 +87,12 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import { useAuthStore } from '@/store/auth';
 import { requestsAPI, purchaseOrdersAPI } from '@/api';
 import PurchaseOrderForm from '@/components/PurchaseOrderForm.vue';
 
 const route = useRoute();
-const router = useRouter();
 const authStore = useAuthStore();
 
 const request = ref(null);

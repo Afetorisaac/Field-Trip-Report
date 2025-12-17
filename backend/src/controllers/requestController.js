@@ -1,5 +1,4 @@
 import Request from '../models/Request.js';
-import User from '../models/User.js';
 
 export const createRequest = async (req, res, next) => {
   try {
