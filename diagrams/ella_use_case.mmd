@@ -1,0 +1,60 @@
+graph TB
+    subgraph System["Ella Procurement System"]
+        UC1[Submit Request]
+        UC2[View Requests]
+        UC3[Approve Request]
+        UC4[Reject Request]
+        UC5[Create Purchase Order]
+        UC6[View Purchase Orders]
+        UC7[Mark as Delivered]
+        UC8[Manage Users]
+        UC9[View Audit Logs]
+        UC10[Login/Logout]
+    end
+
+    Requester((Requester<br/>Ella))
+    DeptHead((Department<br/>Head))
+    Procurement((Procurement<br/>Officer))
+    Admin((Admin))
+
+    %% Requester interactions
+    Requester --> UC1
+    Requester --> UC2
+    Requester --> UC10
+
+    %% Department Head interactions
+    DeptHead --> UC2
+    DeptHead --> UC3
+    DeptHead --> UC4
+    DeptHead --> UC10
+
+    %% Procurement Officer interactions
+    Procurement --> UC2
+    Procurement --> UC5
+    Procurement --> UC6
+    Procurement --> UC7
+    Procurement --> UC10
+
+    %% Admin interactions
+    Admin --> UC1
+    Admin --> UC2
+    Admin --> UC3
+    Admin --> UC4
+    Admin --> UC5
+    Admin --> UC6
+    Admin --> UC7
+    Admin --> UC8
+    Admin --> UC9
+    Admin --> UC10
+
+    %% Relationships
+    UC3 -.includes.-> UC2
+    UC4 -.includes.-> UC2
+    UC5 -.requires.-> UC3
+    UC7 -.requires.-> UC5
+
+    style Requester fill:#3b82f6,color:#fff
+    style DeptHead fill:#10b981,color:#fff
+    style Procurement fill:#f59e0b,color:#fff
+    style Admin fill:#ef4444,color:#fff
+    style System fill:#f3f4f6,stroke:#333,stroke-width:2px
