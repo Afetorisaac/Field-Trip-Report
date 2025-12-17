@@ -1,4 +1,4 @@
-# Ella Procurement System
+# Procurement System
 
 A full-stack production-ready procurement automation system built for Ella (Emmanuella Nana Ama Weir). This system provides a complete workflow for managing procurement requests, approvals, and purchase orders with role-based access control and audit logging.
 
