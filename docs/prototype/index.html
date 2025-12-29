@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Procurement System Prototype | KBTH</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-hospital"></i> KBTH Procurement System
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <span class="navbar-text text-white me-3">
+                            <i class="bi bi-person-circle"></i> <span id="currentUser">Guest</span> (<span id="currentRole">-</span>)
+                        </span>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-light btn-sm" onclick="app.logout()">
+                            <i class="bi bi-box-arrow-right"></i> Switch User
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container-fluid mt-4">
+        <!-- Login Screen -->
+        <div id="loginScreen" class="row justify-content-center">
+            <div class="col-md-6 col-lg-4">
+                <div class="card shadow-lg">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h4><i class="bi bi-lock-fill"></i> System Login</h4>
+                        <p class="mb-0 small">Select your role to continue</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info small">
+                            <i class="bi bi-info-circle"></i> <strong>Demo Mode:</strong> This is a prototype. Data is stored locally in your browser.
+                        </div>
+                        <div class="mb-3">
+                            <label for="userName" class="form-label">Your Name</label>
+                            <input type="text" class="form-control" id="userName" placeholder="Enter your name" value="Emmanuella Weir">
+                        </div>
+                        <div class="mb-3">
+                            <label for="userRole" class="form-label">Select Role</label>
+                            <select class="form-select" id="userRole">
+                                <option value="requester">Requester (Department Staff)</option>
+                                <option value="dept_head">Department Head (Approver)</option>
+                                <option value="procurement">Procurement Officer</option>
+                                <option value="finance">Finance Officer</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary w-100" onclick="app.login()">
+                            <i class="bi bi-box-arrow-in-right"></i> Login
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Instructions -->
+                <div class="card mt-3">
+                    <div class="card-body small">
+                        <h6 class="card-title"><i class="bi bi-question-circle"></i> How to Use This Prototype</h6>
+                        <ol class="mb-0">
+                            <li>Select a role and login to see role-specific views</li>
+                            <li>As <strong>Requester</strong>: Create procurement requests</li>
+                            <li>As <strong>Dept Head</strong>: Approve or reject pending requests</li>
+                            <li>As <strong>Procurement</strong>: Process approved requests and create POs</li>
+                            <li>Switch roles to experience the complete workflow</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Application Screen -->
+        <div id="appScreen" class="d-none">
+            <div class="row">
+                <!-- Sidebar -->
+                <div class="col-md-3 col-lg-2">
+                    <div class="list-group sticky-top" style="top: 20px;">
+                        <a href="#" class="list-group-item list-group-item-action active" data-view="dashboard">
+                            <i class="bi bi-speedometer2"></i> Dashboard
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action" data-view="requests">
+                            <i class="bi bi-file-earmark-text"></i> Requests
+                            <span class="badge bg-primary float-end" id="requestCount">0</span>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action requester-only" data-view="newRequest">
+                            <i class="bi bi-plus-circle"></i> New Request
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action procurement-only" data-view="purchaseOrders">
+                            <i class="bi bi-receipt"></i> Purchase Orders
+                            <span class="badge bg-success float-end" id="poCount">0</span>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action" data-view="about">
+                            <i class="bi bi-info-circle"></i> About
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Main Content Area -->
+                <div class="col-md-9 col-lg-10">
+                    <!-- Dashboard View -->
+                    <div id="dashboardView" class="view-content">
+                        <h2><i class="bi bi-speedometer2"></i> Dashboard</h2>
+                        <div class="row g-3" id="dashboardStats"></div>
+                        <div class="mt-4" id="dashboardContent"></div>
+                    </div>
+
+                    <!-- Requests View -->
+                    <div id="requestsView" class="view-content d-none">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h2><i class="bi bi-file-earmark-text"></i> Procurement Requests</h2>
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-outline-secondary" onclick="app.filterRequests('all')">All</button>
+                                <button class="btn btn-sm btn-outline-warning" onclick="app.filterRequests('pending')">Pending</button>
+                                <button class="btn btn-sm btn-outline-success" onclick="app.filterRequests('approved')">Approved</button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="app.filterRequests('rejected')">Rejected</button>
+                            </div>
+                        </div>
+                        <div id="requestsList"></div>
+                    </div>
+
+                    <!-- New Request View -->
+                    <div id="newRequestView" class="view-content d-none">
+                        <h2><i class="bi bi-plus-circle"></i> Create New Request</h2>
+                        <div class="card">
+                            <div class="card-body">
+                                <form id="newRequestForm">
+                                    <div class="mb-3">
+                                        <label for="requestTitle" class="form-label">Request Title *</label>
+                                        <input type="text" class="form-control" id="requestTitle" required placeholder="e.g., Office Supplies for Q1">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="requestDepartment" class="form-label">Department *</label>
+                                        <select class="form-select" id="requestDepartment" required>
+                                            <option value="">Select Department</option>
+                                            <option value="Surgery">Surgery</option>
+                                            <option value="Pediatrics">Pediatrics</option>
+                                            <option value="Emergency">Emergency Medicine</option>
+                                            <option value="Radiology">Radiology</option>
+                                            <option value="Laboratory">Laboratory</option>
+                                            <option value="Administration">Administration</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="requestDescription" class="form-label">Description *</label>
+                                        <textarea class="form-control" id="requestDescription" rows="3" required placeholder="Describe the items needed and justification"></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="requestPriority" class="form-label">Priority *</label>
+                                        <select class="form-select" id="requestPriority" required>
+                                            <option value="low">Low - Can wait 4+ weeks</option>
+                                            <option value="medium" selected>Medium - Needed within 2-4 weeks</option>
+                                            <option value="high">High - Urgent, needed within 1 week</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="requestAmount" class="form-label">Estimated Amount (GHS) *</label>
+                                        <input type="number" class="form-control" id="requestAmount" required min="1" placeholder="5000">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Items Requested</label>
+                                        <div id="itemsList"></div>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary mt-2" onclick="app.addItem()">
+                                            <i class="bi bi-plus"></i> Add Item
+                                        </button>
+                                    </div>
+                                    <div class="d-flex gap-2">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="bi bi-send"></i> Submit Request
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary" onclick="app.switchView('requests')">
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Purchase Orders View -->
+                    <div id="purchaseOrdersView" class="view-content d-none">
+                        <h2><i class="bi bi-receipt"></i> Purchase Orders</h2>
+                        <div id="purchaseOrdersList"></div>
+                    </div>
+
+                    <!-- About View -->
+                    <div id="aboutView" class="view-content d-none">
+                        <h2><i class="bi bi-info-circle"></i> About This Prototype</h2>
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Procurement System Prototype</h5>
+                                <p><strong>Author:</strong> Emmanuella Nana Ama Weir<br>
+                                <strong>Index:</strong> 1704895585<br>
+                                <strong>Institution:</strong> Korle-Bu Teaching Hospital</p>
+                                
+                                <h6 class="mt-4">Prototype Features</h6>
+                                <ul>
+                                    <li>Multi-role workflow simulation (Requester, Approver, Procurement, Finance)</li>
+                                    <li>Request creation and tracking</li>
+                                    <li>Approval/rejection workflow</li>
+                                    <li>Purchase order generation</li>
+                                    <li>Status tracking and notifications</li>
+                                    <li>Local storage persistence (data saved in browser)</li>
+                                </ul>
+                                
+                                <h6 class="mt-4">Technology Stack</h6>
+                                <ul>
+                                    <li>HTML5, CSS3, JavaScript (Vanilla JS)</li>
+                                    <li>Bootstrap 5 for UI components</li>
+                                    <li>LocalStorage API for data persistence</li>
+                                    <li>Responsive design for mobile and desktop</li>
+                                </ul>
+                                
+                                <div class="alert alert-info mt-4">
+                                    <i class="bi bi-lightbulb"></i> <strong>Note:</strong> This is a client-side prototype for demonstration purposes. 
+                                    A production system would include server-side processing, database storage, authentication, and security features.
+                                </div>
+                                
+                                <div class="mt-4">
+                                    <a href="../index.html" class="btn btn-outline-primary">
+                                        <i class="bi bi-arrow-left"></i> Back to Report
+                                    </a>
+                                    <button class="btn btn-outline-danger" onclick="if(confirm('Clear all data?')) { localStorage.clear(); location.reload(); }">
+                                        <i class="bi bi-trash"></i> Reset All Data
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Request Detail Modal -->
+    <div class="modal fade" id="requestDetailModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Request Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="requestDetailBody"></div>
+                <div class="modal-footer" id="requestDetailActions"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="app.js"></script>
+</body>
+</html>
