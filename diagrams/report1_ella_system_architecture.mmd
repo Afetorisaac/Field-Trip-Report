@@ -1,0 +1,98 @@
+graph TB
+    subgraph "Client Layer"
+        WebApp[Web Application<br/>React/Vue.js<br/>Responsive UI]
+        MobileApp[Mobile Browser<br/>Touch-Optimized]
+    end
+    
+    subgraph "API Gateway & Load Balancer"
+        LB[Nginx Load Balancer<br/>SSL Termination]
+    end
+    
+    subgraph "Application Layer"
+        API1[API Server 1<br/>Node.js + Express]
+        API2[API Server 2<br/>Node.js + Express]
+        Auth[Authentication Service<br/>JWT + RBAC]
+        Workflow[Workflow Engine<br/>Approval Routing]
+        Notification[Notification Service<br/>Email + SMS]
+    end
+    
+    subgraph "Business Logic"
+        ReqMgmt[Request Management<br/>Validation & Processing]
+        POMgmt[Purchase Order<br/>Generation & Tracking]
+        SupplierMgmt[Supplier Management<br/>Performance Tracking]
+        BudgetMgmt[Budget Integration<br/>Real-time Checking]
+        AuditLog[Audit Logging<br/>Compliance Trail]
+    end
+    
+    subgraph "Data Layer"
+        MainDB[(Primary Database<br/>MongoDB/PostgreSQL<br/>Procurement Data)]
+        CacheDB[(Redis Cache<br/>Session & Performance)]
+        FileStore[File Storage<br/>S3/MinIO<br/>Documents & Attachments]
+    end
+    
+    subgraph "Integration Layer"
+        FMIS[Financial System<br/>Budget Data]
+        HRMS[HR System<br/>User Directory]
+        Inventory[Inventory System<br/>Stock Levels]
+    end
+    
+    subgraph "Monitoring & Security"
+        Monitor[Application Monitoring<br/>Prometheus + Grafana]
+        Logger[Centralized Logging<br/>ELK Stack]
+        Security[Security Scanner<br/>Vulnerability Detection]
+    end
+    
+    WebApp --> LB
+    MobileApp --> LB
+    LB --> API1
+    LB --> API2
+    
+    API1 --> Auth
+    API2 --> Auth
+    API1 --> Workflow
+    API2 --> Workflow
+    Workflow --> Notification
+    
+    API1 --> ReqMgmt
+    API2 --> ReqMgmt
+    ReqMgmt --> POMgmt
+    POMgmt --> SupplierMgmt
+    ReqMgmt --> BudgetMgmt
+    API1 --> AuditLog
+    API2 --> AuditLog
+    
+    ReqMgmt --> MainDB
+    POMgmt --> MainDB
+    SupplierMgmt --> MainDB
+    BudgetMgmt --> MainDB
+    AuditLog --> MainDB
+    
+    Auth --> CacheDB
+    API1 --> CacheDB
+    API2 --> CacheDB
+    
+    ReqMgmt --> FileStore
+    POMgmt --> FileStore
+    
+    BudgetMgmt --> FMIS
+    Auth --> HRMS
+    ReqMgmt --> Inventory
+    
+    API1 --> Monitor
+    API2 --> Monitor
+    API1 --> Logger
+    API2 --> Logger
+    Security -.->|Scans| API1
+    Security -.->|Scans| API2
+    
+    classDef clientStyle fill:#e1f5ff,stroke:#0066cc,stroke-width:2px
+    classDef appStyle fill:#fff4e6,stroke:#ff9800,stroke-width:2px
+    classDef dataStyle fill:#e8f5e9,stroke:#4caf50,stroke-width:2px
+    classDef integrationStyle fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px
+    classDef securityStyle fill:#ffebee,stroke:#f44336,stroke-width:2px
+    
+    class WebApp,MobileApp clientStyle
+    class API1,API2,Auth,Workflow,Notification,ReqMgmt,POMgmt,SupplierMgmt,BudgetMgmt,AuditLog appStyle
+    class MainDB,CacheDB,FileStore dataStyle
+    class FMIS,HRMS,Inventory integrationStyle
+    class Monitor,Logger,Security securityStyle

@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Field Trip Report: Korle-Bu Teaching Hospital Procurement System by Emmanuella Nana Ama Weir">
+    <meta name="author" content="Emmanuella Nana Ama Weir">
+    <title>Report 1: Korle-Bu Teaching Hospital Procurement System | Emmanuella Weir</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <style>
+        :root {
+            --primary-color: #0d6efd;
+            --secondary-color: #6c757d;
+            --success-color: #198754;
+            --info-color: #0dcaf0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        .hero-section h1 {
+            font-weight: 700;
+            font-size: 2.5rem;
+        }
+        
+        .metadata-card {
+            background: #f8f9fa;
+            border-left: 4px solid var(--primary-color);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary-color);
+        }
+        
+        .subsection-title {
+            color: var(--secondary-color);
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .nav-sidebar {
+            position: sticky;
+            top: 20px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+        }
+        
+        .nav-sidebar .nav-link {
+            color: #495057;
+            padding: 0.5rem 1rem;
+            border-left: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .nav-sidebar .nav-link:hover,
+        .nav-sidebar .nav-link.active {
+            background-color: #e7f1ff;
+            border-left-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .diagram-card {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .diagram-card pre {
+            background: white;
+            padding: 1rem;
+            border-radius: 0.25rem;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            max-height: 500px;
+        }
+        
+        .prototype-banner {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .prototype-banner h3 {
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .btn-prototype {
+            background: white;
+            color: #f5576c;
+            font-weight: 600;
+            padding: 0.75rem 2rem;
+            border-radius: 2rem;
+            border: none;
+            transition: all 0.3s;
+        }
+        
+        .btn-prototype:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .reference-item {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .reference-item:last-child {
+            border-bottom: none;
+        }
+        
+        footer {
+            background: #212529;
+            color: #adb5bd;
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-section h1 {
+                font-size: 1.75rem;
+            }
+            
+            .nav-sidebar {
+                position: relative;
+                margin-bottom: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#"><i class="bi bi-journal-text"></i> Report 1: KBTH</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#introduction">Report</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#diagrams">Diagrams</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="prototype/index.html" target="_blank">
+                            <i class="bi bi-play-circle"></i> Live Prototype
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/Afetorisaac/Field-Trip-Report" target="_blank">
+                            <i class="bi bi-github"></i> GitHub
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container text-center">
+            <h1><i class="bi bi-hospital"></i> Field Trip Report</h1>
+            <h2 class="h4 mt-3">Korle-Bu Teaching Hospital Procurement System Analysis</h2>
+            <p class="lead mt-3">A comprehensive study of procurement processes and digital transformation opportunities</p>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="row">
+            <!-- Sidebar Navigation -->
+            <div class="col-lg-3">
+                <nav class="nav-sidebar">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-title text-muted mb-3">TABLE OF CONTENTS</h6>
+                            <nav class="nav flex-column">
+                                <a class="nav-link" href="#metadata">Author Info</a>
+                                <a class="nav-link" href="#introduction">1.1 Introduction</a>
+                                <a class="nav-link" href="#background">1.2 Background</a>
+                                <a class="nav-link" href="#workflow">1.3 Workflow</a>
+                                <a class="nav-link" href="#challenges">1.4 Challenges</a>
+                                <a class="nav-link" href="#solution">1.5 Proposed Solution</a>
+                                <a class="nav-link" href="#architecture">1.6 Architecture</a>
+                                <a class="nav-link" href="#implementation">1.7 Implementation</a>
+                                <a class="nav-link" href="#benefits">1.8 Benefits</a>
+                                <a class="nav-link" href="#diagrams">Diagrams</a>
+                                <a class="nav-link" href="#references">References</a>
+                                <a class="nav-link text-primary fw-bold" href="prototype/index.html" target="_blank">
+                                    <i class="bi bi-box-arrow-up-right"></i> Prototype Demo
+                                </a>
+                            </nav>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-lg-9">
+                <!-- Metadata Card -->
+                <div id="metadata" class="metadata-card">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p class="mb-2"><strong><i class="bi bi-person-fill"></i> Student:</strong> Emmanuella Nana Ama Weir</p>
+                            <p class="mb-2"><strong><i class="bi bi-hash"></i> Index Number:</strong> 1704895585</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-2"><strong><i class="bi bi-person-badge"></i> Lecturer:</strong> DR. MARTIN MABEIFAM UJAKPA</p>
+                            <p class="mb-2"><strong><i class="bi bi-calendar-event"></i> Date:</strong> NOVEMBER 2025</p>
+                        </div>
+                    </div>
+                    <p class="mb-0 mt-2"><strong><i class="bi bi-building"></i> Institution Visited:</strong> Korle-Bu Teaching Hospital - Procurement Department</p>
+                </div>
+
+                <!-- Prototype Banner -->
+                <div class="prototype-banner">
+                    <h3><i class="bi bi-play-circle-fill"></i> Interactive Procurement System Prototype</h3>
+                    <p class="mb-3">Experience the proposed automated procurement system in action</p>
+                    <a href="prototype/index.html" target="_blank" class="btn btn-prototype">
+                        Launch Live Demo <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+
+                <!-- Report Content -->
+                <article>
+                    <h2 id="introduction" class="section-title">1.1 Introduction</h2>
+                    <p>This report documents the findings from a comprehensive field trip to Korle-Bu Teaching Hospital (KBTH), Ghana's premier tertiary healthcare institution. The visit focused on examining the hospital's procurement and supply chain management practices, with particular emphasis on understanding the challenges, processes, and technological opportunities within their current operational framework.</p>
+                    <p>Korle-Bu Teaching Hospital serves as a major referral center for the southern sector of Ghana and neighboring countries, handling complex medical cases and providing specialized healthcare services. The procurement department plays a critical role in ensuring the continuous availability of medical supplies, equipment, pharmaceuticals, and other essential resources necessary for the hospital's operations.</p>
+                    <p>The primary objective of this field trip was to observe and analyze the existing procurement workflows, identify pain points in the current system, and propose technology-driven solutions that could enhance efficiency, transparency, and accountability in the procurement process.</p>
+
+                    <h2 id="background" class="section-title">1.2 Background and Context</h2>
+                    <p>Korle-Bu Teaching Hospital, established in 1923, stands as one of West Africa's largest medical facilities, with over 2,000 beds and serving approximately 1 million patients annually. The institution's procurement department manages a complex supply chain involving thousands of items ranging from basic consumables to sophisticated medical equipment.</p>
+                    <p>The procurement process at KBTH operates within the framework of Ghana's Public Procurement Act (Act 663, 2003, as amended by Act 914, 2016), which mandates transparency, competitive bidding, and value for money in all public sector acquisitions. However, the hospital faces unique challenges due to the critical nature of healthcare delivery, where stockouts can directly impact patient outcomes and, in some cases, be life-threatening.</p>
+                    <p>During the visit, it was observed that the procurement department handles multiple request streams from various clinical and non-clinical departments simultaneously. The current system relies heavily on manual paperwork, physical approval workflows, and spreadsheet-based tracking mechanisms, leading to delays and occasional miscommunications.</p>
+
+                    <h2 id="workflow" class="section-title">1.3 Observed Procurement Workflow</h2>
+                    <p>The existing procurement process at Korle-Bu Teaching Hospital follows a multi-stage workflow:</p>
+                    
+                    <h3 class="subsection-title">1.3.1 Request Initiation</h3>
+                    <p>Departments identify their needs and complete physical requisition forms detailing the items required, quantities, specifications, and justifications. These forms are submitted to the departmental head for initial review and authorization.</p>
+                    
+                    <h3 class="subsection-title">1.3.2 Department-Level Approval</h3>
+                    <p>The head of department reviews the request for necessity, appropriateness, and alignment with departmental budgets. Approved requests are signed and forwarded to the procurement department through internal mail or physical delivery by staff members.</p>
+                    
+                    <h3 class="subsection-title">1.3.3 Procurement Processing</h3>
+                    <p>The procurement office receives requests and performs several key activities:</p>
+                    <ul>
+                        <li>Verification of request completeness and compliance with procurement policies</li>
+                        <li>Budget availability confirmation with the finance department</li>
+                        <li>Supplier identification and quotation solicitation</li>
+                        <li>Comparative analysis of quotations based on price, quality, and delivery terms</li>
+                        <li>Preparation of procurement documentation</li>
+                    </ul>
+                    
+                    <h3 class="subsection-title">1.3.4 Approval Hierarchy</h3>
+                    <p>Depending on the financial threshold, requests follow different approval routes:</p>
+                    <ul>
+                        <li><strong>Minor procurements</strong> (below GHS 10,000): Procurement Manager approval</li>
+                        <li><strong>Medium procurements</strong> (GHS 10,000 - 50,000): Deputy Director approval</li>
+                        <li><strong>Major procurements</strong> (above GHS 50,000): Entity Tender Committee review</li>
+                    </ul>
+                    
+                    <h3 class="subsection-title">1.3.5 Purchase Order Generation</h3>
+                    <p>Once approvals are obtained, purchase orders are generated manually using templates, printed, signed, and dispatched to suppliers. Copies are filed in the procurement office and shared with the finance department for payment processing.</p>
+                    
+                    <h3 class="subsection-title">1.3.6 Delivery and Verification</h3>
+                    <p>Goods received are inspected by the stores department, verified against the purchase order specifications, and accepted if compliant. Discrepancies trigger a notification process back to procurement for resolution.</p>
+
+                    <h2 id="challenges" class="section-title">1.4 Identified Challenges</h2>
+                    <div class="alert alert-warning" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill"></i> <strong>Key Challenges Identified During Field Visit</strong>
+                    </div>
+                    
+                    <h3 class="subsection-title">1.4.1 Process Delays</h3>
+                    <p>The manual nature of the workflow introduces substantial time lags between request initiation and fulfillment. A typical request can take 2-4 weeks for processing, with urgent items sometimes delayed due to missing signatures or misplaced documents.</p>
+                    
+                    <h3 class="subsection-title">1.4.2 Lack of Real-Time Visibility</h3>
+                    <p>Requesting departments have limited visibility into the status of their submissions. Staff often resort to phone calls or physical visits to the procurement office to track progress, consuming valuable time for both parties.</p>
+                    
+                    <h3 class="subsection-title">1.4.3 Documentation Management</h3>
+                    <p>Physical files accumulate rapidly, creating storage challenges and making historical data retrieval difficult. The absence of a centralized digital repository means that past procurement decisions and supplier performance data are not readily accessible for analysis.</p>
+                    
+                    <h3 class="subsection-title">1.4.4 Approval Bottlenecks</h3>
+                    <p>Key decision-makers often travel for meetings, conferences, or clinical duties, causing approval delays when physical signatures are required. There is no mechanism for remote approval or delegation during absences.</p>
+                    
+                    <h3 class="subsection-title">1.4.5 Data Fragmentation</h3>
+                    <p>Information about requests, budgets, suppliers, and delivery status resides in disconnected spreadsheets and filing systems, making comprehensive reporting and analytics challenging.</p>
+                    
+                    <h3 class="subsection-title">1.4.6 Accountability and Audit Trail</h3>
+                    <p>Reconstructing the complete history of a procurement transaction for audit purposes requires gathering documents from multiple locations and individuals, a time-consuming and error-prone process.</p>
+                    
+                    <h3 class="subsection-title">1.4.7 Limited Budget Control</h3>
+                    <p>Without real-time integration between procurement requests and budget systems, there is a risk of over-committing funds or discovering budget shortfalls late in the procurement cycle.</p>
+
+                    <h2 id="solution" class="section-title">1.5 Proposed Solution: Automated Procurement System</h2>
+                    <div class="alert alert-success" role="alert">
+                        <i class="bi bi-lightbulb-fill"></i> <strong>Technology-Driven Solution</strong> - An integrated digital platform to transform procurement operations
+                    </div>
+                    
+                    <p>Based on the observed challenges, an automated procurement management system is proposed to modernize and streamline the hospital's procurement operations. The system would serve as a comprehensive digital platform enabling end-to-end management of the procurement lifecycle.</p>
+                    
+                    <h3 class="subsection-title">1.5.1 Core System Features</h3>
+                    
+                    <div class="row g-3 my-3">
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-file-earmark-text text-primary"></i> Request Management</h5>
+                                    <ul class="small">
+                                        <li>Electronic submission with structured templates</li>
+                                        <li>Automatic validation of required fields</li>
+                                        <li>Categorization by urgency and value</li>
+                                        <li>Document attachment support</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-diagram-3 text-success"></i> Workflow Automation</h5>
+                                    <ul class="small">
+                                        <li>Configurable approval routing</li>
+                                        <li>Email and SMS notifications</li>
+                                        <li>Escalation for overdue approvals</li>
+                                        <li>Mobile-responsive interface</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-people text-info"></i> Supplier Management</h5>
+                                    <ul class="small">
+                                        <li>Centralized supplier database</li>
+                                        <li>Automated quotation solicitation</li>
+                                        <li>Vendor portal for submissions</li>
+                                        <li>Performance tracking</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-cash-coin text-warning"></i> Budget Integration</h5>
+                                    <ul class="small">
+                                        <li>Real-time budget checking</li>
+                                        <li>Automatic fund reservation</li>
+                                        <li>Budget utilization reporting</li>
+                                        <li>Integration with finance systems</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 id="architecture" class="section-title">1.6 System Architecture and Technology Stack</h2>
+                    <p>The proposed system employs a modern three-tier architecture designed for scalability, security, and maintainability.</p>
+                    
+                    <h3 class="subsection-title">1.6.1 Presentation Layer</h3>
+                    <p>A responsive web application built with contemporary frameworks (such as React or Vue.js) providing an intuitive user interface accessible from desktop computers, tablets, and mobile devices.</p>
+                    
+                    <h3 class="subsection-title">1.6.2 Application Layer</h3>
+                    <p>A RESTful API server developed using Node.js with Express framework, implementing business logic, workflow rules, and data validation. The API supports authentication via JSON Web Tokens (JWT) and role-based access control.</p>
+                    
+                    <h3 class="subsection-title">1.6.3 Data Layer</h3>
+                    <p>A robust database system (MongoDB or PostgreSQL) storing all procurement data with proper indexing for performance, backup mechanisms for disaster recovery, and encryption for sensitive information.</p>
+                    
+                    <h3 class="subsection-title">1.6.4 Integration Layer</h3>
+                    <p>APIs and connectors to integrate with existing hospital systems including Financial Management Information System (FMIS), Human Resource Management System (HRMS), and Inventory Management System.</p>
+                    
+                    <h3 class="subsection-title">1.6.5 Security Considerations</h3>
+                    <ul>
+                        <li>HTTPS encryption for all data transmission</li>
+                        <li>Multi-factor authentication for sensitive operations</li>
+                        <li>Role-based access control with principle of least privilege</li>
+                        <li>Regular security updates and vulnerability scanning</li>
+                        <li>Data backup and disaster recovery protocols</li>
+                    </ul>
+
+                    <h2 id="implementation" class="section-title">1.7 Implementation Strategy</h2>
+                    
+                    <h3 class="subsection-title">1.7.1 Phased Rollout Approach</h3>
+                    <div class="timeline my-4">
+                        <div class="card mb-3">
+                            <div class="card-header bg-primary text-white">
+                                <strong>Phase 1: Foundation (Months 1-2)</strong>
+                            </div>
+                            <div class="card-body">
+                                <ul>
+                                    <li>Requirements gathering and system customization</li>
+                                    <li>Infrastructure setup and testing environment</li>
+                                    <li>User role definition and access control</li>
+                                    <li>Initial data migration</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="card mb-3">
+                            <div class="card-header bg-info text-white">
+                                <strong>Phase 2: Pilot Program (Months 3-4)</strong>
+                            </div>
+                            <div class="card-body">
+                                <ul>
+                                    <li>Launch with 2-3 pilot departments</li>
+                                    <li>Focus on high-volume, low-complexity procurements</li>
+                                    <li>Daily monitoring and issue resolution</li>
+                                    <li>Gather user feedback and refine workflows</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="card mb-3">
+                            <div class="card-header bg-success text-white">
+                                <strong>Phase 3: Expanded Rollout (Months 5-6)</strong>
+                            </div>
+                            <div class="card-body">
+                                <ul>
+                                    <li>Onboard additional departments in stages</li>
+                                    <li>Introduce complex procurement types</li>
+                                    <li>Integration with financial systems</li>
+                                    <li>Expand reporting capabilities</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="card mb-3">
+                            <div class="card-header bg-warning">
+                                <strong>Phase 4: Full Deployment (Months 7-8)</strong>
+                            </div>
+                            <div class="card-body">
+                                <ul>
+                                    <li>Hospital-wide implementation</li>
+                                    <li>Historical data transition</li>
+                                    <li>Advanced features activation</li>
+                                    <li>Legacy system retirement</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h3 class="subsection-title">1.7.2 Change Management</h3>
+                    <p><strong>Training Program:</strong> Role-specific training sessions, video tutorials, user manuals, and establishment of super-users in each department for peer support.</p>
+                    <p><strong>Communication Strategy:</strong> Regular updates via email, town hall meetings, feedback channels, and success stories highlighting benefits realized.</p>
+                    <p><strong>Support Structure:</strong> Dedicated helpdesk during transition, on-site support team, online ticketing system, and escalation procedures for critical problems.</p>
+
+                    <h2 id="benefits" class="section-title">1.8 Expected Benefits and Impact</h2>
+                    
+                    <h3 class="subsection-title">1.8.1 Efficiency Gains</h3>
+                    <p>The automated system is expected to reduce procurement processing time by 60-70%, enabling faster fulfillment of departmental needs. Automated routing and notifications eliminate waiting time for physical document movement.</p>
+                    
+                    <h3 class="subsection-title">1.8.2 Cost Savings</h3>
+                    <p>Enhanced visibility into spending patterns enables better negotiation with suppliers, bulk purchasing opportunities, and elimination of emergency procurements at premium prices.</p>
+                    
+                    <h3 class="subsection-title">1.8.3 Transparency and Accountability</h3>
+                    <p>Every action within the system is logged with user attribution and timestamps, creating an unalterable audit trail. This transparency deters fraudulent activities and simplifies compliance reporting.</p>
+                    
+                    <h3 class="subsection-title">1.8.4 Data-Driven Decision Making</h3>
+                    <p>The system generates comprehensive analytics on procurement patterns, supplier performance, budget utilization, and process bottlenecks for strategic planning.</p>
+                    
+                    <h3 class="subsection-title">1.8.5 Improved Supplier Relations</h3>
+                    <p>Suppliers benefit from a clear, consistent procurement process with electronic communication and payment tracking, enhancing the hospital's reputation.</p>
+                    
+                    <h3 class="subsection-title">1.8.6 Compliance and Risk Mitigation</h3>
+                    <p>Automated compliance checks ensure adherence to procurement regulations and hospital policies. The system can flag unusual patterns for investigation.</p>
+                    
+                    <h3 class="subsection-title">1.8.7 Staff Productivity</h3>
+                    <p>By eliminating repetitive manual tasks, procurement staff can focus on strategic activities such as supplier relationship management and process optimization.</p>
+
+                    <h2 class="section-title">Conclusion</h2>
+                    <p>The field trip to Korle-Bu Teaching Hospital provided valuable insights into the complexities and challenges of procurement management in a large healthcare institution. The current manual processes, while functional, introduce inefficiencies, delays, and missed opportunities for optimization.</p>
+                    <p>The proposed automated procurement system addresses the identified challenges through workflow automation, real-time visibility, integrated budget control, and comprehensive audit trails. By leveraging modern technology, the hospital can transform its procurement operations from a paper-intensive, reactive function to a strategic, data-driven capability.</p>
+                    <p>This field trip experience has reinforced the importance of understanding user needs, process flows, and organizational constraints when designing technology solutions. The insights gained will inform future system development efforts aimed at solving real-world business challenges in healthcare and other sectors.</p>
+
+                    <!-- Diagrams Section -->
+                    <h2 id="diagrams" class="section-title mt-5"><i class="bi bi-diagram-3"></i> System Diagrams</h2>
+                    <p class="text-muted">The following Mermaid diagrams illustrate the system architecture, use cases, and workflow sequences.</p>
+                    
+                    <div class="diagram-card">
+                        <h3 class="h5 mb-3"><i class="bi bi-boxes"></i> System Architecture Diagram</h3>
+                        <p class="text-muted small">Three-tier architecture with client layer, API gateway, application services, and data storage</p>
+                        <div class="mb-2">
+                            <a href="../diagrams/report1_ella_system_architecture.mmd" download class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-download"></i> Download .mmd file
+                            </a>
+                        </div>
+                        <pre><code class="language-mermaid">graph TB
+    subgraph "Client Layer"
+        WebApp[Web Application&lt;br/&gt;React/Vue.js&lt;br/&gt;Responsive UI]
+        MobileApp[Mobile Browser&lt;br/&gt;Touch-Optimized]
+    end
+    
+    subgraph "API Gateway & Load Balancer"
+        LB[Nginx Load Balancer&lt;br/&gt;SSL Termination]
+    end
+    
+    subgraph "Application Layer"
+        API1[API Server 1&lt;br/&gt;Node.js + Express]
+        API2[API Server 2&lt;br/&gt;Node.js + Express]
+        Auth[Authentication Service&lt;br/&gt;JWT + RBAC]
+        Workflow[Workflow Engine&lt;br/&gt;Approval Routing]
+        Notification[Notification Service&lt;br/&gt;Email + SMS]
+    end
+    
+    subgraph "Business Logic"
+        ReqMgmt[Request Management&lt;br/&gt;Validation & Processing]
+        POMgmt[Purchase Order&lt;br/&gt;Generation & Tracking]
+        SupplierMgmt[Supplier Management&lt;br/&gt;Performance Tracking]
+        BudgetMgmt[Budget Integration&lt;br/&gt;Real-time Checking]
+        AuditLog[Audit Logging&lt;br/&gt;Compliance Trail]
+    end
+    
+    WebApp --&gt; LB
+    MobileApp --&gt; LB
+    LB --&gt; API1
+    LB --&gt; API2
+    API1 --&gt; Auth
+    API1 --&gt; Workflow
+    API1 --&gt; ReqMgmt
+    ReqMgmt --&gt; POMgmt
+    POMgmt --&gt; SupplierMgmt
+    ReqMgmt --&gt; BudgetMgmt</code></pre>
+                    </div>
+                    
+                    <div class="diagram-card">
+                        <h3 class="h5 mb-3"><i class="bi bi-person-circle"></i> Use Case Diagram</h3>
+                        <p class="text-muted small">Actor roles and their interactions with system functionality</p>
+                        <div class="mb-2">
+                            <a href="../diagrams/report1_ella_use_case.mmd" download class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-download"></i> Download .mmd file
+                            </a>
+                        </div>
+                        <pre><code class="language-mermaid">graph LR
+    Requester[👤 Requester] --&gt; UC1[Submit Request]
+    Requester --&gt; UC2[View Status]
+    DeptHead[👤 Dept Head] --&gt; UC3[Approve/Reject]
+    DeptHead --&gt; UC4[Review Requests]
+    ProcOfficer[👤 Procurement] --&gt; UC5[Process Request]
+    ProcOfficer --&gt; UC6[Generate PO]
+    ProcOfficer --&gt; UC7[Track Delivery]
+    Finance[👤 Finance] --&gt; UC8[Check Budget]
+    Finance --&gt; UC9[Reserve Funds]
+    Supplier[🏢 Supplier] --&gt; UC10[Submit Quote]
+    Supplier --&gt; UC11[View PO]
+    Admin[👤 Admin] --&gt; UC12[Manage Users]
+    Admin --&gt; UC13[Configure Workflow]
+    Auditor[👤 Auditor] --&gt; UC14[View Audit Trail]
+    Auditor --&gt; UC15[Export Reports]</code></pre>
+                    </div>
+                    
+                    <div class="diagram-card">
+                        <h3 class="h5 mb-3"><i class="bi bi-diagram-2"></i> Sequence Diagram: Procurement Workflow</h3>
+                        <p class="text-muted small">Complete workflow from request submission through approval to purchase order generation</p>
+                        <div class="mb-2">
+                            <a href="../diagrams/report1_ella_sequence.mmd" download class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-download"></i> Download .mmd file
+                            </a>
+                        </div>
+                        <pre><code class="language-mermaid">sequenceDiagram
+    actor Requester
+    participant System
+    participant Workflow
+    actor DeptHead
+    actor ProcOfficer
+    
+    Requester-&gt;&gt;System: Login
+    System--&gt;&gt;Requester: Dashboard
+    Requester-&gt;&gt;System: Submit Request
+    System-&gt;&gt;Workflow: Check Budget
+    Workflow--&gt;&gt;System: Available
+    System-&gt;&gt;DeptHead: Notify Approval Needed
+    DeptHead-&gt;&gt;System: Approve Request
+    System-&gt;&gt;Workflow: Update Status
+    Workflow-&gt;&gt;ProcOfficer: Notify Processing
+    ProcOfficer-&gt;&gt;System: Generate PO
+    System--&gt;&gt;Requester: Notify Completion</code></pre>
+                    </div>
+
+                    <!-- References -->
+                    <h2 id="references" class="section-title mt-5"><i class="bi bi-book"></i> References</h2>
+                    <ol class="reference-list">
+                        <li class="reference-item">Public Procurement Authority of Ghana. (2016). <em>Public Procurement (Amendment) Act, 2016 (Act 914)</em>. Accra: Government of Ghana.</li>
+                        <li class="reference-item">Korle-Bu Teaching Hospital. (2024). <em>Annual Report 2023</em>. Accra: KBTH Publications.</li>
+                        <li class="reference-item">Ministry of Health, Ghana. (2020). <em>Standard Treatment Guidelines for Health Facilities in Ghana</em>. Accra: Ministry of Health.</li>
+                        <li class="reference-item">World Health Organization. (2022). <em>Managing Procurement in Health Facilities: A Practical Guide</em>. Geneva: WHO Press.</li>
+                        <li class="reference-item">Chartered Institute of Procurement and Supply. (2023). <em>Global Standard for Procurement and Supply</em>. CIPS Publications.</li>
+                        <li class="reference-item">Lysons, K., & Farrington, B. (2020). <em>Procurement and Supply Chain Management</em> (10th ed.). Pearson Education Limited.</li>
+                        <li class="reference-item">Ghana Health Service. (2021). <em>Health Sector Supply Chain Strategic Plan 2021-2025</em>. Accra: GHS.</li>
+                        <li class="reference-item">African Development Bank. (2019). <em>Strengthening Public Procurement Systems in Africa</em>. AfDB Publications.</li>
+                        <li class="reference-item">Appiah, K. O., & Bonsu, R. (2021). "Challenges of Public Procurement in Ghana's Health Sector." <em>African Journal of Public Administration and Management</em>, 12(3), 45-62.</li>
+                        <li class="reference-item">International Federation of Accountants. (2018). <em>Public Sector Financial Management Transparency and Accountability</em>. IFAC Publications.</li>
+                    </ol>
+                </article>
+
+                <!-- Call to Action -->
+                <div class="card bg-light mt-5 mb-4">
+                    <div class="card-body text-center py-4">
+                        <h4 class="card-title">Ready to experience the solution?</h4>
+                        <p class="card-text">Try the interactive prototype to see how the automated procurement system works</p>
+                        <a href="prototype/index.html" target="_blank" class="btn btn-primary btn-lg">
+                            <i class="bi bi-play-circle-fill"></i> Launch Prototype Demo
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Field Trip Report</h5>
+                    <p class="small">Korle-Bu Teaching Hospital Procurement System Analysis<br>
+                    By Emmanuella Nana Ama Weir | November 2025</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <h5>Resources</h5>
+                    <p class="small">
+                        <a href="../reports/Report1_Ella.md" class="text-decoration-none text-light" download>Download Report (Markdown)</a><br>
+                        <a href="prototype/index.html" class="text-decoration-none text-light" target="_blank">Interactive Prototype</a><br>
+                        <a href="https://github.com/Afetorisaac/Field-Trip-Report" class="text-decoration-none text-light" target="_blank">GitHub Repository</a>
+                    </p>
+                </div>
+            </div>
+            <hr class="my-3" style="border-color: #495057;">
+            <p class="text-center small mb-0">&copy; 2025 Emmanuella Nana Ama Weir. Educational Project.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Smooth scrolling for anchor links -->
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    // Update active nav link
+                    document.querySelectorAll('.nav-sidebar .nav-link').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                }
+            });
+        });
+        
+        // Highlight active section in navigation on scroll
+        window.addEventListener('scroll', () => {
+            let current = '';
+            const sections = document.querySelectorAll('h2[id], div[id]');
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            document.querySelectorAll('.nav-sidebar .nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
