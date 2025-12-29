@@ -1,0 +1,85 @@
+graph LR
+    subgraph Actors
+        Requester[👤 Requester<br/>Department Staff]
+        DeptHead[👤 Department Head<br/>Approver]
+        ProcOfficer[👤 Procurement Officer<br/>Processor]
+        Finance[👤 Finance Officer<br/>Budget Control]
+        Supplier[🏢 Supplier<br/>Vendor]
+        Admin[👤 System Admin<br/>Configuration]
+        Auditor[👤 Auditor<br/>Compliance]
+    end
+    
+    subgraph "Procurement System Use Cases"
+        UC1[Submit Procurement Request]
+        UC2[View Request Status]
+        UC3[Modify Pending Request]
+        UC4[Approve/Reject Request]
+        UC5[Review Department Requests]
+        UC6[Verify Budget Availability]
+        UC7[Reserve Budget Funds]
+        UC8[Process Procurement Request]
+        UC9[Solicit Quotations]
+        UC10[Compare Supplier Quotes]
+        UC11[Generate Purchase Order]
+        UC12[Send PO to Supplier]
+        UC13[Track Delivery Status]
+        UC14[Receive and Verify Goods]
+        UC15[Submit Quotation]
+        UC16[View Purchase Orders]
+        UC17[Confirm Delivery]
+        UC18[Manage User Accounts]
+        UC19[Configure Workflows]
+        UC20[Generate Reports]
+        UC21[View Audit Trail]
+        UC22[Export Compliance Data]
+        UC23[Monitor System Performance]
+    end
+    
+    Requester --> UC1
+    Requester --> UC2
+    Requester --> UC3
+    Requester --> UC14
+    
+    DeptHead --> UC4
+    DeptHead --> UC5
+    DeptHead --> UC2
+    
+    Finance --> UC6
+    Finance --> UC7
+    Finance --> UC20
+    
+    ProcOfficer --> UC8
+    ProcOfficer --> UC9
+    ProcOfficer --> UC10
+    ProcOfficer --> UC11
+    ProcOfficer --> UC12
+    ProcOfficer --> UC13
+    ProcOfficer --> UC20
+    
+    Supplier --> UC15
+    Supplier --> UC16
+    Supplier --> UC17
+    
+    Admin --> UC18
+    Admin --> UC19
+    Admin --> UC23
+    
+    Auditor --> UC21
+    Auditor --> UC22
+    Auditor --> UC20
+    
+    UC1 -.->|triggers| UC6
+    UC4 -.->|requires| UC6
+    UC8 -.->|includes| UC9
+    UC8 -.->|includes| UC10
+    UC11 -.->|follows| UC8
+    UC12 -.->|follows| UC11
+    UC13 -.->|monitors| UC12
+    
+    classDef actorStyle fill:#e3f2fd,stroke:#1976d2,stroke-width:3px
+    classDef ucStyle fill:#fff9c4,stroke:#f57f17,stroke-width:2px
+    classDef criticalUC fill:#ffccbc,stroke:#d84315,stroke-width:2px
+    
+    class Requester,DeptHead,ProcOfficer,Finance,Supplier,Admin,Auditor actorStyle
+    class UC1,UC4,UC6,UC8,UC11,UC14 criticalUC
+    class UC2,UC3,UC5,UC7,UC9,UC10,UC12,UC13,UC15,UC16,UC17,UC18,UC19,UC20,UC21,UC22,UC23 ucStyle

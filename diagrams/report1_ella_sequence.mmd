@@ -1,0 +1,147 @@
+sequenceDiagram
+    autonumber
+    actor Requester as 👤 Requester
+    participant WebUI as Web Interface
+    participant API as API Server
+    participant Auth as Auth Service
+    participant Workflow as Workflow Engine
+    participant DB as Database
+    participant Budget as Budget System
+    participant Notify as Notification Service
+    actor DeptHead as 👤 Dept Head
+    actor ProcOfficer as 👤 Procurement Officer
+    actor Supplier as 🏢 Supplier
+    
+    Note over Requester,Supplier: Procurement Request & Approval Workflow
+    
+    Requester->>WebUI: Login
+    WebUI->>API: POST /auth/login
+    API->>Auth: Validate credentials
+    Auth->>DB: Verify user
+    DB-->>Auth: User data
+    Auth-->>API: JWT token
+    API-->>WebUI: Authentication success
+    WebUI-->>Requester: Dashboard
+    
+    Requester->>WebUI: Create new request
+    WebUI->>Requester: Display request form
+    Requester->>WebUI: Submit request details<br/>(items, quantity, justification)
+    
+    WebUI->>API: POST /requests
+    API->>Auth: Validate JWT token
+    Auth-->>API: Token valid, user role
+    
+    API->>Budget: Check budget availability
+    Budget-->>API: Budget status (available/insufficient)
+    
+    alt Budget Available
+        API->>DB: Save request (status: pending)
+        DB-->>API: Request ID
+        
+        API->>Workflow: Trigger approval workflow
+        Workflow->>DB: Get department head
+        DB-->>Workflow: Approver details
+        
+        Workflow->>Notify: Send approval notification
+        Notify->>DeptHead: Email + SMS notification
+        
+        API-->>WebUI: Request created successfully
+        WebUI-->>Requester: Success message + Request ID
+    else Budget Insufficient
+        API-->>WebUI: Budget exceeded error
+        WebUI-->>Requester: Error: Insufficient budget
+    end
+    
+    Note over DeptHead: Department Head Reviews Request
+    
+    DeptHead->>WebUI: Login and view pending requests
+    WebUI->>API: GET /requests?status=pending
+    API->>DB: Query pending requests
+    DB-->>API: List of requests
+    API-->>WebUI: Pending requests
+    WebUI-->>DeptHead: Display requests
+    
+    DeptHead->>WebUI: Review request details
+    WebUI->>API: GET /requests/{id}
+    API->>DB: Fetch request
+    DB-->>API: Request details
+    API-->>WebUI: Full request data
+    
+    alt Approve Request
+        DeptHead->>WebUI: Approve request
+        WebUI->>API: POST /requests/{id}/approve
+        API->>DB: Update status to approved
+        DB-->>API: Update confirmed
+        
+        API->>Budget: Reserve funds
+        Budget-->>API: Funds reserved
+        
+        API->>Workflow: Trigger procurement processing
+        Workflow->>Notify: Notify requester & procurement
+        Notify->>Requester: Request approved notification
+        Notify->>ProcOfficer: New approved request
+        
+        API-->>WebUI: Approval success
+        WebUI-->>DeptHead: Confirmation message
+        
+    else Reject Request
+        DeptHead->>WebUI: Reject request (with reason)
+        WebUI->>API: POST /requests/{id}/reject
+        API->>DB: Update status to rejected
+        DB-->>API: Update confirmed
+        
+        API->>Notify: Notify requester
+        Notify->>Requester: Request rejected notification
+        
+        API-->>WebUI: Rejection recorded
+        WebUI-->>DeptHead: Confirmation message
+    end
+    
+    Note over ProcOfficer: Procurement Processing
+    
+    ProcOfficer->>WebUI: View approved requests
+    WebUI->>API: GET /requests?status=approved
+    API->>DB: Query approved requests
+    DB-->>API: List of requests
+    API-->>WebUI: Approved requests
+    
+    ProcOfficer->>WebUI: Select request for processing
+    ProcOfficer->>API: Solicit quotations
+    Note over ProcOfficer,Supplier: Quotation process (simplified)
+    
+    Supplier->>API: Submit quotation
+    API->>DB: Store quotation
+    
+    ProcOfficer->>WebUI: Compare quotes & select supplier
+    ProcOfficer->>WebUI: Create Purchase Order
+    WebUI->>API: POST /requests/{id}/create-po
+    
+    API->>DB: Generate PO (unique PO number)
+    DB-->>API: PO created
+    
+    API->>Notify: Send PO to supplier
+    Notify->>Supplier: PO notification + document
+    
+    API->>DB: Update request status to PO_issued
+    DB-->>API: Status updated
+    
+    API-->>WebUI: PO created successfully
+    WebUI-->>ProcOfficer: Success + PO number
+    
+    Note over Supplier: Delivery & Completion
+    
+    Supplier->>ProcOfficer: Deliver goods + invoice
+    ProcOfficer->>WebUI: Mark PO as delivered
+    WebUI->>API: POST /po/{id}/mark-delivered
+    
+    API->>DB: Update PO status to delivered
+    API->>DB: Log delivery details
+    DB-->>API: Confirmed
+    
+    API->>Notify: Notify requester of delivery
+    Notify->>Requester: Delivery notification
+    
+    API-->>WebUI: Delivery recorded
+    WebUI-->>ProcOfficer: Success message
+    
+    Note over Requester,Supplier: Complete audit trail recorded in database
